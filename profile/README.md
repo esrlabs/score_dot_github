@@ -25,13 +25,13 @@ See [S-CORE-website](https://eclipse-score.github.io/) and [documentation](https
 | [eclipse-score.github.io](https://github.com/eclipse-score/eclipse-score.github.io) | The landing page website for the Score project | 💤 obsolete |
 | [eclipse-score-website](https://github.com/eclipse-score/eclipse-score-website) | (no description) | ✅ active |
 | [eclipse-score-website-preview](https://github.com/eclipse-score/eclipse-score-website-preview) | (no description) | ✅ active |
-| [eclipse-score-website-published](https://github.com/eclipse-score/eclipse-score-website-published) | (no description) | 💤 obsolete |
+| [eclipse-score-website-published](https://github.com/eclipse-score/eclipse-score-website-published) | (no description) | ✅ active |
 
 ### Modules
 
 | Repository | Description | Status |
 |------------|-------------|--------|
-| [module_template](https://github.com/eclipse-score/module_template) | C++ & Rust Bazel Template Repository | 💤 obsolete |
+| [module_template](https://github.com/eclipse-score/module_template) | C++ & Rust Bazel Template Repository | ✅ active |
 | [baselibs](https://github.com/eclipse-score/baselibs) | base libraries including common functionality | ✅ active |
 | [communication](https://github.com/eclipse-score/communication) | Repository for the communication module LoLa | ✅ active |
 | [feo](https://github.com/eclipse-score/feo) | Repository for the Fixed Order Execution (FEO) framework | ✅ active |
