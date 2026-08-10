@@ -2,7 +2,16 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ._html_common import BAZEL_ICON, CSS, GITHUB_ICON, e, language_badge, version_badge
+from ._html_common import (
+    BAZEL_DETAIL_ICON,
+    CSS,
+    DOCS_ICON,
+    GITHUB_ICON,
+    docs_url,
+    e,
+    language_badge,
+    version_badge,
+)
 from .metrics_report import tracked_dep_label
 from .models import DEFAULT_CATEGORY, DEFAULT_SUBCATEGORY, LockfileStatus
 
@@ -42,7 +51,7 @@ def _render_hero(entry: RepoEntry, org_name: str) -> str:
     github_url = f"https://github.com/{org_name}/{entry.name}"
     name_html = e(entry.name)
     if entry.content.is_bazel_repo:
-        name_html += f" {BAZEL_ICON}"
+        name_html += f" {BAZEL_DETAIL_ICON}"
 
     chips = ""
     if entry.category != DEFAULT_CATEGORY:
@@ -54,6 +63,7 @@ def _render_hero(entry: RepoEntry, org_name: str) -> str:
 
     desc = e(entry.description) if entry.description else ""
 
+    docs_url_str = docs_url(org_name, entry.name)
     return (
         "<header>\n"
         '  <nav class="breadcrumb">\n'
@@ -63,6 +73,9 @@ def _render_hero(entry: RepoEntry, org_name: str) -> str:
         f"  <h1>{name_html}"
         f' <a href="{e(github_url)}" class="gh-link" title="Open on GitHub ↗"'
         f' target="_blank" rel="noopener">{GITHUB_ICON}</a>'
+        f' <a href="{e(docs_url_str)}" class="docs-link" title="Documentation ↗"'
+        f' aria-label="Documentation ↗"'
+        f' target="_blank" rel="noopener">{DOCS_ICON}</a>'
         f"</h1>\n"
         f'  <p class="subtitle">{desc}</p>\n'
         f'  <div class="meta-chips">{chips}</div>\n'

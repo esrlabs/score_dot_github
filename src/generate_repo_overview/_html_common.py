@@ -14,7 +14,12 @@ _TEMPLATES = Path(__file__).parent / "templates"
 CSS = (_TEMPLATES / "styles.css").read_text(encoding="utf-8")
 
 BAZEL_ICON = (
-    '<img src="https://bazel.build/_pwa/bazel/icons/icon-72x72.png"'
+    '<img src="bazel_logo.svg"'
+    ' alt="Bazel" class="icon-bazel">'
+)
+
+BAZEL_DETAIL_ICON = (
+    '<img src="../bazel_logo.svg"'
     ' alt="Bazel" class="icon-bazel">'
 )
 
@@ -31,6 +36,17 @@ GITHUB_ICON = (
     '-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/>'
     "</svg>"
 )
+
+DOCS_ICON = "📑"
+
+
+def docs_url(org_name: str, repo_name: str) -> str:
+    """Compute docs site URL from repo URL.
+
+    https://github.com/{org}/{repo} → https://{org}.github.io/{repo}
+    """
+    return f"https://{org_name}.github.io/{repo_name}"
+
 
 
 _LANGUAGE_COLORS: dict[str, str] = {
@@ -67,12 +83,18 @@ def language_badge(lang: str | None) -> str:
 def repo_name_cell(entry: RepoEntry, org_name: str, *, bazel_icon: bool = True) -> str:
     detail_url = f"{e(entry.name)}/index.html"
     github_url = f"https://github.com/{org_name}/{entry.name}"
+    docs_link_str = docs_url(org_name, entry.name)
     cell = f'<a href="{detail_url}">{e(entry.name)}</a>'
     if bazel_icon and entry.content.is_bazel_repo:
         cell += f" {BAZEL_ICON}"
     cell += (
         f' <a href="{e(github_url)}" class="gh-link" title="Open on GitHub ↗"'
         f' target="_blank" rel="noopener">{GITHUB_ICON}</a>'
+    )
+    cell += (
+        f' <a href="{e(docs_link_str)}" class="docs-link" title="Documentation ↗"'
+        f' aria-label="Documentation ↗"'
+        f' target="_blank" rel="noopener">{DOCS_ICON}</a>'
     )
     if entry.description:
         cell += f' <span class="repo-desc">{e(entry.description)}</span>'
