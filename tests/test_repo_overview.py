@@ -1154,6 +1154,52 @@ def test_known_good_pin_parser_ignores_malformed_json() -> None:
     )
 
 
+def test_version_pin_retries_v_prefixed_tag_after_plain_version_is_rejected() -> None:
+    """Resolve a module version through a real tag before comparing Git commits.
+
+    ``known_good.json`` stores ``8.3.0``, while this repository's Git tag is
+    ``v8.3.0``. PyGithub's lazy commit initially echoes either requested ref as
+    ``sha``; completion must reject the plain version and return the tag's real
+    commit SHA before the resolver accepts it.
+    """
+    module_version = "8.3.0"
+    github_tag = "v8.3.0"
+    verified_commit_sha = "0123456789abcdef0123456789abcdef01234567"
+    attempted_refs: list[str] = []
+
+    class LazyCommit:
+        """Mirror PyGithub: before completion, sha still echoes the requested ref."""
+
+        def __init__(self, requested_ref: str) -> None:
+            self.sha = requested_ref
+
+        def complete(self) -> None:
+            if self.sha != github_tag:
+                raise LookupError(f"No Git ref named {self.sha}")
+            self.sha = verified_commit_sha
+
+    class Repository:
+        def get_commit(self, requested_ref: str) -> LazyCommit:
+            attempted_refs.append(requested_ref)
+            return LazyCommit(requested_ref)
+
+    version_pin = reference_integration.KnownGoodPin(
+        module="score_docs_as_code",
+        group="Core",
+        branch="main",
+        version=module_version,
+        commit_hash=None,
+    )
+
+    assert (
+        reference_integration.resolve_reference_integration_pin(
+            Repository(), version_pin
+        )
+        == verified_commit_sha
+    )
+    assert attempted_refs == [module_version, github_tag]
+
+
 def test_latest_release_details_keep_divergence_from_single_comparison(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
